@@ -8,17 +8,17 @@ client = Client(config.API_KEY, config.API_SECRET)
 # for price in prices:
 #     print(price)
 
-symbol = "ETHUSDT"
+symbol = "BTCUSDT"
 
 candles = client.get_klines(symbol=symbol, interval = Client.KLINE_INTERVAL_1DAY)
 
-csvfile = open('all_time_daily_link.csv', 'w', newline='')
+csvfile = open('daily_BTC.csv', 'w', newline='')
 candlestick_writer = csv.writer(csvfile, delimiter = ',')
 
 # for candlestick in candles:
 #     candlestick_writer.writerow(candlestick)
 
-candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1DAY, "1 Jan, 2020")
+candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1DAY, "1 Jan, 2022")
 # candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
 # candlesticks = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1DAY, "10 days ago UTC")
 
