@@ -8,7 +8,7 @@ client = Client(config.API_KEY, config.API_SECRET)
 # for price in prices:
 #     print(price)
 
-symbol = "LINKUSDT"
+symbol = "ETHUSDT"
 
 candles = client.get_klines(symbol=symbol, interval = Client.KLINE_INTERVAL_1DAY)
 
@@ -18,10 +18,10 @@ candlestick_writer = csv.writer(csvfile, delimiter = ',')
 # for candlestick in candles:
 #     candlestick_writer.writerow(candlestick)
 
-candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1DAY, "1 Jan, 2017")
+candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1DAY, "1 Jan, 2020")
 # candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
 # candlesticks = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1DAY, "10 days ago UTC")
-#LINK DOT
+
 csvfile.write('Date,Open,High,Low,Close,Volume,OpenInterest\n')
 for candlestick in candlesticks:
     candlestick[0] = candlestick[0] /1000
