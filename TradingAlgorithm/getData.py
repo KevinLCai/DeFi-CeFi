@@ -1,5 +1,6 @@
 from binance.client import Client
-import csv, config
+import csv
+import config
 import datetime
 
 client = Client(config.API_KEY, config.API_SECRET)
@@ -10,21 +11,22 @@ client = Client(config.API_KEY, config.API_SECRET)
 
 symbol = "BTCUSDT"
 
-candles = client.get_klines(symbol=symbol, interval = Client.KLINE_INTERVAL_1DAY)
+candles = client.get_klines(symbol=symbol, interval=Client.KLINE_INTERVAL_1DAY)
 
 csvfile = open('daily_BTC.csv', 'w', newline='')
-candlestick_writer = csv.writer(csvfile, delimiter = ',')
+candlestick_writer = csv.writer(csvfile, delimiter=',')
 
 # for candlestick in candles:
 #     candlestick_writer.writerow(candlestick)
 
-candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1DAY, "1 Jan, 2022")
+candlesticks = client.get_historical_klines(
+    symbol, Client.KLINE_INTERVAL_1DAY, "1 Jan, 2022")
 # candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
 # candlesticks = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1DAY, "10 days ago UTC")
 
 csvfile.write('Date,Open,High,Low,Close,Volume,OpenInterest\n')
 for candlestick in candlesticks:
-    candlestick[0] = candlestick[0] /1000
+    candlestick[0] = candlestick[0] / 1000
     t = datetime.datetime.fromtimestamp(candlestick[0])
     day = t.strftime('%Y-%m-%d')
     candlestick[0] = day
