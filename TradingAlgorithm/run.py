@@ -3,8 +3,8 @@ import sys
 import argparse
 import pandas as pd
 import backtrader as bt
-# from strategies.GoldenCross import GoldenCross
-from SimpleStrategy import SimpleStrategy
+from strategies.GoldenCross import GoldenCross
+from strategies.SimpleStrategy import SimpleStrategy
 
 cerebro = bt.Cerebro()
 cerebro.broker.setcash(100000)
@@ -15,7 +15,7 @@ spy_prices = pd.read_csv('TradingAlgorithm/data/daily_BTC.csv',
 feed = bt.feeds.PandasData(dataname=spy_prices)
 cerebro.adddata(feed)
 
-cerebro.addstrategy(SimpleStrategy)
+cerebro.addstrategy(GoldenCross)
+# cerebro.addstrategy(SimpleStrategy)
 
 cerebro.run()
-cerebro.plot()
