@@ -1,13 +1,8 @@
 import math
 import backtrader as bt
 
-# MACD line is the FastEMA - SlowEMA
-# Signal line is the mean of the 9 day MA of the MACD line
 
-# Use RSI as a
-
-
-class SimpleStrategy(bt.Strategy):
+class PairsStrategy(bt.Strategy):
     params = (('fast', 50), ('slow', 200),
               ('order_percentage', 0.90), ('ticker', 'DOT'))
     # fast-12, slow-26
