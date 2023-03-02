@@ -44,6 +44,10 @@ def main(args):
     pairs = args.pairs
     filetype = args.filetype
     interval = set_interval(timeframe)
+    if not args.from_date:
+        args.from_date = "010122"
+    from_date = datetime.datetime.strptime(
+        args.from_date, "%d%m%y").strftime("%-d %b, %Y")
 
     client = Client(config.API_KEY, config.API_SECRET)
 
@@ -52,7 +56,7 @@ def main(args):
         for symbol in pairs:
             candles = client.get_klines(symbol=symbol, interval=interval)
             candlesticks = client.get_historical_klines(
-                symbol, interval, "1 Jan, 2022")
+                symbol, interval, from_date)
 
             for candlestick in candlesticks:
                 # Convert timestamp to date
@@ -70,7 +74,7 @@ def main(args):
                 candlestick_data[symbol][day].append(candlestick[4])
 
         # Write the data to a CSV file
-        with open(f'{timeframe}_candlestick.csv', 'w', newline='') as csvfile:
+        with open(f'TradingAlgorithm/data/combined/{timeframe}_{"".join([pair + "_" for pair in pairs])}_combined.csv', 'w', newline='') as csvfile:
             candlestick_writer = csv.writer(csvfile, delimiter=',')
 
             # Write header row
@@ -97,7 +101,8 @@ def main(args):
             candles = client.get_klines(
                 symbol=symbol, interval=interval)
 
-            csvfile = open(f'{timeframe}_{symbol}.csv', 'w', newline='')
+            csvfile = open(
+                f'TradingAlgorithm/data/separate/{timeframe}_{symbol}.csv', 'w', newline='')
             candlestick_writer = csv.writer(csvfile, delimiter=',')
 
             # for candlestick in candles:
@@ -126,6 +131,9 @@ if __name__ == "__main__":
                         help="Token pairs", required=True)
     parser.add_argument(
         "--filetype", choices=["combined", "separate"], help="Output CSV Format", required=True)
+    parser.add_argument(
+        "--from-date", help="Data starting date, format DDMMYY"
+    )
 
     args = parser.parse_args()
 
