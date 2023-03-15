@@ -57,6 +57,8 @@ def main(args):
             candles = client.get_klines(symbol=symbol, interval=interval)
             candlesticks = client.get_historical_klines(
                 symbol, interval, from_date)
+            print(candles)
+            print(candlesticks)
 
             for candlestick in candlesticks:
                 # Convert timestamp to date
