@@ -29,8 +29,8 @@ class Historical():
 class Deal():
     def __init__(self):
         # Might need to include which tokens are being traded - more data
-        self.api_url = "http://127.0.0.1:5000/cefi_deal"
-        self.data_to_send = {"tradeID": 1, "tokenID": 1,
+        self.api_url = "http://127.0.0.1:5000/deal"
+        self.data_to_send = {"strategy":"CeFi", "tradeID": 1, "tokenID": 1,
                              "timestamp": 1679263552, "price": 28000, "size": 1, "fees": 0.01}
 
     def send_data(self):
