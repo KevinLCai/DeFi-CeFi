@@ -6,11 +6,14 @@ import json
 import pandas as pd
 from getData import GetData
 import datetime
+import csv
 
 TIMEFRAME = "1HOUR"
 PAIRS = ["ETHUSDT"],
 FILE_TYPE = "combined",
 
+
+FILENAME="/Users/kevincai/Library/Mobile Documents/com~apple~CloudDocs/Career/CV/DeFi_Trading/DeFi-CeFi/TradingAlgorithm/data/daily_BTC.csv"
 
 load_dotenv()
 
@@ -30,15 +33,41 @@ exchange = ccxt.binance(
 SOCKET = "wss://stream.binance.com:443/ws/btcusdt@kline_1m"
 
 def on_message(ws, message):
-    data = json.loads(message)
+    try:
+        data = json.loads(message)
+    except json.JSONDecodeError:
+        print('Invalid JSON message received.')
+        return
     print(data)
+    candlestick = data['k']
+    if not candlestick:
+        print('No candlestick data found in message.')
+        return
     # write to csv
+    df = pd.read_csv(FILENAME)
+    new_row = {'Date':candlestick['t']/1000.0, 'Open': candlestick['o'], 'High': candlestick['h'], 'Low': candlestick['l'], 'Close': candlestick['c'], 'Volume': candlestick['v'], 'OpenInterest': candlestick['B']}
+    # new_row = [candlestick['t']/1000.0, candlestick['o'], candlestick['h'], candlestick['l'], candlestick['c'], candlestick['v'], candlestick['B']]
+
+    print(df.tail())
+    print(new_row)
+    
+    
+    df = pd.concat([df, pd.DataFrame(new_row, index=[1])], ignore_index=True)
+    print("==================")
+    print(df.tail())
 
     # put through strategy
 
     # buy/sell/hold
 
     # if buy or sell send deal data to api gateway
+
+    # write to csv
+
+    with open(FILENAME, 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(new_row.values())
+    # print(df.tail())
 
 def on_error(ws, error):
     print(error)
@@ -50,7 +79,7 @@ def on_open(ws):
     print("WebSocket opened")
     # Gets Market Data and writes to a csv
     data = collect_market_data()
-    
+
     
 
 def collect_market_data():

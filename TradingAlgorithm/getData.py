@@ -70,8 +70,9 @@ class GetData():
                 for candlestick in candlesticks:
                     # Convert timestamp to date
                     candlestick[0] = candlestick[0] / 1000
-                    t = datetime.datetime.fromtimestamp(candlestick[0])
-                    day = t.strftime('%Y-%m-%d')
+                    # t = datetime.datetime.fromtimestamp(candlestick[0])
+                    # day = t.strftime('%Y-%m-%d')
+                    day = candlestick[0]
 
                     # Create a new list for the pair and date if it doesn't exist
                     if symbol not in candlestick_data:
