@@ -7,6 +7,7 @@ import pandas as pd
 from getData import GetData
 import datetime
 import csv
+from strategies.DummyStrategy import DummyStrategy
 
 TIMEFRAME = "1HOUR"
 PAIRS = ["ETHUSDT"],
@@ -54,20 +55,24 @@ def on_message(ws, message):
     
     df = pd.concat([df, pd.DataFrame(new_row, index=[1])], ignore_index=True)
     print("==================")
-    print(df.tail())
 
-    # put through strategy
+
+    # # put through strategy
+    strategy = DummyStrategy(df)
+    decision = strategy.next()
+    print(decision)
 
     # buy/sell/hold
 
+
     # if buy or sell send deal data to api gateway
 
-    # write to csv
 
+    # write to csv
     with open(FILENAME, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(new_row.values())
-    # print(df.tail())
+    print(df.tail())
 
 def on_error(ws, error):
     print(error)
