@@ -3,62 +3,80 @@ import os
 from dotenv import load_dotenv
 import websocket
 import json
+import pandas as pd
+from getData import GetData
+import datetime
 
-# load_dotenv()
+TIMEFRAME = "1HOUR"
+PAIRS = ["ETHUSDT"],
+FILE_TYPE = "combined",
 
-# API_KEY = os.getenv("BINANCE_API_KEY")
-# API_SECRET = os.getenv("BINANCE_API_SECRET")
 
-# exchange = ccxt.binance(
-#     # {
-#     # 'apiKey': API_KEY,
-#     # 'secret': API_SECRET
-#     # }
-# )
+load_dotenv()
 
-# # Define your trading strategy
-# def trading_strategy(ticker):
-#     pass
+API_KEY = os.getenv("BINANCE_API_KEY")
+API_SECRET = os.getenv("BINANCE_API_SECRET")
 
-# # Define the WebSocket message handler
-# def handle_message(message):
-#     if message['e'] == 'ticker':
-#         print(message)
-#         # Update moving average
-#         # symbol = message['s']
-#         # price = float(message['c'])
-#         # exchange.fetch_ohlcv(symbol, timeframe='1d') # fetch historical data
-#         # ticker = exchange.fetch_ticker(symbol) # fetch current ticker
-#         # ma50 = sum([ohlcv[4] for ohlcv in exchange.ohlcv[symbol]]) / 50 # calculate moving average
-#         # ticker['ma50'] = ma50
-        
-#         # # Implement trading strategy
-#         # action = trading_strategy(ticker)
-#         # if action == 'buy':
-#         #     order = exchange.create_order(symbol, 'market', 'buy', 0.1)
-#         #     print('Bought 0.1', symbol, 'at', ticker['c'])
-#         # elif action == 'sell':
-#         #     order = exchange.create_order(symbol, 'market', 'sell', 0.1)
-#         #     print('Sold 0.1', symbol, 'at', ticker['c'])
-#         # else:
-#         #     print('Hold', symbol)
+exchange = ccxt.binance(
+    {
+    'apiKey': API_KEY,
+    'secret': API_SECRET
+    }
+)
+
 
 # Connect to the WebSocket and start listening for messages
 
-socket = 'wss://stream.binance.com:9443/ws/btcusd/@kline_1m'
+SOCKET = "wss://stream.binance.com:443/ws/btcusdt@kline_1m"
 
 def on_message(ws, message):
-    print(message)
+    data = json.loads(message)
+    print(data)
+    # write to csv
+
+    # put through strategy
+
+    # buy/sell/hold
+
+    # if buy or sell send deal data to api gateway
+
+def on_error(ws, error):
+    print(error)
 
 def on_close(ws):
-    print("CLOSED")
+    print("WebSocket closed")
 
-if __name__ == "__main__":
-    websocket.enableTrace(True)
-    ws = websocket.WebSocketApp(socket, 
-                                # on_open=on_open,
-                                on_message=on_message,
-                                # on_error=on_error,
-                                on_close=on_close)
+def on_open(ws):
+    print("WebSocket opened")
+    # Gets Market Data and writes to a csv
+    data = collect_market_data()
     
-    ws.run_forever()
+    
+
+def collect_market_data():
+    # try find historical data
+    try:
+        df = pd.read_csv(
+            '/Users/kevincai/Library/Mobile Documents/com~apple~CloudDocs/Career/CV/DeFi_Trading/DeFi-CeFi/TradingAlgorithm/data/daily_BTC.csv')
+        # set the latest data point
+        last_date = df["Date"].iloc[-1]
+    except:
+        last_date = None
+
+    # get data from last date, if there is any data - append to csv    
+    # get_data = GetData(TIMEFRAME, PAIRS, FILE_TYPE, datetime.datetime.strptime(last_date, '%d%m%y'))
+    # get_data.collect_data()
+
+    data = pd.read_csv('/Users/kevincai/Library/Mobile Documents/com~apple~CloudDocs/Career/CV/DeFi_Trading/DeFi-CeFi/TradingAlgorithm/data/daily_BTC.csv')
+    
+    return data
+
+
+ws = websocket.WebSocketApp(SOCKET,
+                            on_open=on_open,
+                            on_message=on_message,
+                            on_error=on_error,
+                            on_close=on_close,
+                            )
+
+ws.run_forever()
