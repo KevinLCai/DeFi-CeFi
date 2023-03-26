@@ -76,9 +76,8 @@ def on_message(ws, message):
         print("SYMBOL======")
         print(symbol)
 
-        tradeID = 1
         fees = 0.00001
-        deal = Deal("CeFi", tradeID, symbol, candlestick['t']/1000.0, decision, price, amount, fees)
+        deal = Deal("CeFi", symbol, candlestick['t']/1000.0, decision, price, amount, fees)
         deal.send_data()
 
     # write to csv
