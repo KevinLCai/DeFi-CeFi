@@ -27,11 +27,11 @@ class Historical():
         response = requests.post(self.api_url, json=self.data_to_send)
 
 class Deal():
-    def __init__(self, strategy, tradeID, tokenID, timestamp, price, size, fees):
+    def __init__(self, strategy, dealID, tokenID, timestamp, orderType, price, size, fees):
         # Might need to include which tokens are being traded - more data
         self.api_url = "http://127.0.0.1:5000/deal"
-        self.data_to_send = {"strategy": strategy, "tradeID": tradeID, "tokenID": tokenID,
-                             "timestamp": timestamp, "price": price, "size": size, "fees": fees}
+        self.data_to_send = {"strategy": strategy, "dealID": dealID, "tokenID": tokenID,
+                             "timestamp": timestamp, "orderType": orderType , "price": price, "size": size, "fees": fees}
 
     def send_data(self):
         response = requests.post(self.api_url, json=self.data_to_send)

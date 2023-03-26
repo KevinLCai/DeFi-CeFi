@@ -11,8 +11,8 @@ from strategies.DummyStrategy import DummyStrategy
 from api.api import Deal
 
 TIMEFRAME = "1HOUR"
-PAIRS = ["ETHUSDT"],
-FILE_TYPE = "combined",
+PAIRS = ["ETHUSDT"]
+FILE_TYPE = "combined"
 
 
 FILENAME="/Users/kevincai/Library/Mobile Documents/com~apple~CloudDocs/Career/CV/DeFi_Trading/DeFi-CeFi/TradingAlgorithm/data/daily_BTC.csv"
@@ -73,9 +73,12 @@ def on_message(ws, message):
         #     print("No Order")
 
         # if buy or sell send deal data to api gateway
+        print("SYMBOL======")
+        print(symbol)
+
         tradeID = 1
         fees = 0.00001
-        deal = Deal("CeFi", tradeID, symbol, candlestick['t']/1000.0, price, amount, fees)
+        deal = Deal("CeFi", tradeID, symbol, candlestick['t']/1000.0, decision, price, amount, fees)
         deal.send_data()
 
     # write to csv
