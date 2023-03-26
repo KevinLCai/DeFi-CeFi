@@ -11,7 +11,7 @@ from strategies.DummyStrategy import DummyStrategy
 from api.api import Deal
 
 TIMEFRAME = "1HOUR"
-PAIRS = ["ETHUSDT"]
+PAIRS = ["BTC/USDT"]
 FILE_TYPE = "combined"
 
 
@@ -59,7 +59,7 @@ def on_message(ws, message):
 
     if decision != 'hold':
         # create order
-        symbol = PAIRS[0]
+        symbol = PAIRS[0].split('/')[0]
         amount = 0.0001
         price = None # current market price
 
