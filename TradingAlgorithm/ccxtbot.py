@@ -8,6 +8,7 @@ from getData import GetData
 import datetime
 import csv
 from strategies.DummyStrategy import DummyStrategy
+from api.api import Deal
 
 TIMEFRAME = "1HOUR"
 PAIRS = ["ETHUSDT"],
@@ -39,40 +40,49 @@ def on_message(ws, message):
     except json.JSONDecodeError:
         print('Invalid JSON message received.')
         return
-    print(data)
+    
     candlestick = data['k']
     if not candlestick:
         print('No candlestick data found in message.')
         return
-    # write to csv
+    
+    # read data in
     df = pd.read_csv(FILENAME)
     new_row = {'Date':candlestick['t']/1000.0, 'Open': candlestick['o'], 'High': candlestick['h'], 'Low': candlestick['l'], 'Close': candlestick['c'], 'Volume': candlestick['v'], 'OpenInterest': candlestick['B']}
-    # new_row = [candlestick['t']/1000.0, candlestick['o'], candlestick['h'], candlestick['l'], candlestick['c'], candlestick['v'], candlestick['B']]
-
-    print(df.tail())
-    print(new_row)
-    
     
     df = pd.concat([df, pd.DataFrame(new_row, index=[1])], ignore_index=True)
-    print("==================")
-
 
     # # put through strategy
     strategy = DummyStrategy(df)
     decision = strategy.next()
     print(decision)
 
-    # buy/sell/hold
+    if decision != 'hold':
+        # create order
+        symbol = PAIRS[0]
+        amount = 0.0001
+        price = None # current market price
 
+        # execute trade
 
-    # if buy or sell send deal data to api gateway
+        # order = exchange.create_order(symbol, 'limit', decision, amount, price)
 
+        # if order:
+        #     print("ORDER")
+        # else:
+        #     print("No Order")
+
+        # if buy or sell send deal data to api gateway
+        tradeID = 1
+        fees = 0.00001
+        deal = Deal("CeFi", tradeID, symbol, candlestick['t']/1000.0, price, amount, fees)
+        deal.send_data()
 
     # write to csv
     with open(FILENAME, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(new_row.values())
-    print(df.tail())
+
 
 def on_error(ws, error):
     print(error)
@@ -97,7 +107,8 @@ def collect_market_data():
     except:
         last_date = None
 
-    # get data from last date, if there is any data - append to csv    
+    # get data from last date, if there is any data - append to csv
+
     # get_data = GetData(TIMEFRAME, PAIRS, FILE_TYPE, datetime.datetime.strptime(last_date, '%d%m%y'))
     # get_data.collect_data()
 

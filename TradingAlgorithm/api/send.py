@@ -6,5 +6,5 @@ from api import Deal
 # historical.send_data()
 
 # Send Deal data to API Gateway
-deal = Deal()
+deal = Deal('CeFi', 1, 'ETH', 1679787060.0, 1800, 0.1, 0.001)
 deal.send_data()

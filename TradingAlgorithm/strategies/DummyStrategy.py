@@ -8,7 +8,7 @@ class DummyStrategy():
 
     def next(self):
         close_price = float(self.df["Close"].iloc[-1])
-        possible_decisions = ["BUY", "SELL", "HOLD"]
+        possible_decisions = ["buy", "sell", "hold"]
         decision = random.choice(possible_decisions)
         print(f"Close price: {close_price}; Decision: {decision}")
         return f"{decision}"
