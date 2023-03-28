@@ -79,6 +79,7 @@ def on_message(ws, message):
         fees = 0.00001
         deal = Deal("CeFi", symbol, candlestick['t']/1000.0, decision, price, amount, fees)
         deal.send_data()
+        print("DEAL SENT")
 
     # write to csv
     with open(FILENAME, 'a', newline='') as csvfile:
