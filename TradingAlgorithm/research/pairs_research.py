@@ -1,6 +1,5 @@
 import argparse
 from matplotlib.pyplot import figure
-import seaborn as sn
 import pandas as pd
 import numpy as np
 
