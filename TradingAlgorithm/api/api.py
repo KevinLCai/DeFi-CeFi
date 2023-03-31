@@ -4,7 +4,7 @@ import csv
 
 class Historical():
     def __init__(self, filepath):
-        self.api_url = "http://127.0.0.1:5000/cefi_historical"
+        self.api_url = "http://127.0.0.1:3000/cefi_historical"
         self.filepath = filepath
 
     def format_data(self):
