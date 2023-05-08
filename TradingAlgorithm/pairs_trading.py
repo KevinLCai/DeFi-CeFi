@@ -37,12 +37,13 @@ SOCKETS = {
 
 btc_candle_received = False
 eth_candle_received = False
+in_position = False
 
 def get_filename(symbol):
     return f"/Users/kevincai/Library/Mobile Documents/com~apple~CloudDocs/Career/CV/DeFi_Trading/DeFi-CeFi/TradingAlgorithm/data/separate/4HOUR_{symbol}.csv"
 
 async def handle_message(message, symbol):
-    global btc_candle_received, eth_candle_received
+    global btc_candle_received, eth_candle_received, in_position
     if symbol == "BTC":
         btc_candle_received = True
     elif symbol == "ETH":
@@ -85,7 +86,7 @@ async def handle_message(message, symbol):
     btc_df = pd.read_csv(get_filename("BTC"))
 
     # # put through strategy
-    strategy = PairsTrading(btc_df, eth_df)
+    strategy = PairsTrading(btc_df, eth_df, in_position)
     decision = strategy.next()
 
     print(f"{decision}")
@@ -107,6 +108,9 @@ async def handle_message(message, symbol):
             eth_order = exchange.create_order("ETH", 'limit', decision["ETH"], eth_order_amount, eth_price)
             # create BTC order
             btc_order = exchange.create_order("BTC", 'limit', decision["BTC"], btc_order_amount, btc_price)
+        
+        # update global variable
+        in_position = True
 
         # if buy or sell send deal data to api gateway
         fees = 0.00001
