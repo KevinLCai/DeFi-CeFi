@@ -91,34 +91,22 @@ def on_error(ws, error):
     print(error)
 
 def on_close(ws):
-    print("WebSocket closed")
+    print("WebSocket closed.")
 
 def on_open(ws):
-    print("WebSocket opened")
-    # Gets Market Data and writes to a csv
-    data = collect_market_data()
+    print("WebSocket opened...")
 
+    pair = [PAIRS[0].replace('/','')]
+    filename = f"{TIMEFRAME}_{pair}.csv"
     
-
-def collect_market_data():
-    # try find historical data
-    try:
-        df = pd.read_csv(
-            '/Users/kevincai/Library/Mobile Documents/com~apple~CloudDocs/Career/CV/DeFi_Trading/DeFi-CeFi/TradingAlgorithm/data/daily_BTC.csv')
-        # set the latest data point
-        last_date = df["Date"].iloc[-1]
-    except:
-        last_date = None
-
-    # get data from last date, if there is any data - append to csv
-
-    # get_data = GetData(TIMEFRAME, PAIRS, FILE_TYPE, datetime.datetime.strptime(last_date, '%d%m%y'))
-    # get_data.collect_data()
-
-    data = pd.read_csv('/Users/kevincai/Library/Mobile Documents/com~apple~CloudDocs/Career/CV/DeFi_Trading/DeFi-CeFi/TradingAlgorithm/data/daily_BTC.csv')
-    
-    return data
-
+    # if data already exists, get data using latest timestamp
+    if os.path.exists(f'/Users/kevincai/Library/Mobile Documents/com~apple~CloudDocs/Career/CV/DeFi_Trading/DeFi-CeFi/TradingAlgorithm/data/separate/{filename}'):
+        # to be implemented
+        pass
+    else:
+        get_data = GetData(TIMEFRAME, pair, 'separate', None)
+        get_data.collect_data()
+    print("Data collected...")
 
 ws = websocket.WebSocketApp(SOCKET,
                             on_open=on_open,
