@@ -37,3 +37,6 @@ class Deal():
         response = requests.post(self.api_url, json=self.data_to_send)
         print(response)
         return True if response else False
+
+    def print_deal(self):
+        print(self.data_to_send)
