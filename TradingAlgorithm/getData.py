@@ -121,8 +121,9 @@ class GetData():
                 csvfile.write('Date,Open,High,Low,Close,Volume,OpenInterest\n')
                 for candlestick in candlesticks:
                     candlestick[0] = candlestick[0] / 1000
-                    t = datetime.datetime.fromtimestamp(candlestick[0])
-                    day = t.strftime('%Y-%m-%d')
+                    # t = datetime.datetime.fromtimestamp(candlestick[0])
+                    # day = t.strftime('%Y-%m-%d')
+                    day = candlestick[0]
                     candlestick[0] = day
                     candlestick[6] = 0.0
                     candlestick_writer.writerow(candlestick[:7])
@@ -140,6 +141,9 @@ if __name__ == "__main__":
         "--filetype", choices=["combined", "separate"], help="Output CSV Format", required=True)
     parser.add_argument(
         "--from-date", help="Data starting date, format DDMMYY"
+    )
+    parser.add_argument(
+        "--filename", default=None, help="Specify filename"
     )
 
     args = parser.parse_args()

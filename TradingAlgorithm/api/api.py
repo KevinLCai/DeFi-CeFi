@@ -29,9 +29,14 @@ class Historical():
 class Deal():
     def __init__(self, strategy, tokenID, timestamp, orderType, price, size, fees):
         # Might need to include which tokens are being traded - more data
-        self.api_url = "http://127.0.0.1:3000/deal"
+        self.api_url = "http://127.0.0.1:5000/deal"
         self.data_to_send = {"strategy": strategy, "tokenID": tokenID,
                              "timestamp": timestamp, "orderType": orderType , "price": price, "size": size, "fees": fees}
 
     def send_data(self):
         response = requests.post(self.api_url, json=self.data_to_send)
+        print(response)
+        return True if response else False
+
+    def print_deal(self):
+        print(self.data_to_send)
