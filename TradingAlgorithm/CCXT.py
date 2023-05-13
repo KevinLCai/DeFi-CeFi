@@ -12,7 +12,7 @@ from api.api import Deal
 
 
 class CCXT:
-    def __init__(self, api_key, api_secret, timeframe, token_pair, strategy):
+    def __init__(self, api_key, api_secret, timeframe, token_pair, strategy, strategy_params):
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self.TIMEFRAME = timeframe
@@ -21,6 +21,7 @@ class CCXT:
         self.SOCKET = f"wss://stream.binance.com:443/ws/{token_pair.replace('/', '').lower()}@kline_{CCXT.timeframe_to_code(timeframe)}"
         print(self.SOCKET)
         self.Strategy = strategy
+        self.strategy_params = strategy_params
 
         load_dotenv()
 
@@ -76,7 +77,10 @@ class CCXT:
         df = pd.concat([df, pd.DataFrame(new_row, index=[1])], ignore_index=True)
 
         # Apply strategy
-        strategy = self.Strategy(df)
+        if not self.strategy_params:
+            strategy = self.Strategy(df)
+        else:
+            strategy = self.Strategy(df, **self.strategy_params)
         decision = strategy.next()
         print(decision)
 
