@@ -1,3 +1,7 @@
+Other components of this project include:
+API: https://github.com/KevinLCai/DeFi-API-Gateway
+Frontend: https://github.com/KevinLCai/DeFi-Frontend
+
 backtrader indicators:
 https://www.backtrader.com/docu/indautoref/
 
